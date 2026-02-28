@@ -1,8 +1,8 @@
 package ru.gr0550x.math;
 
 public class Complex {
-    private double re;
-    private double im;
+    private final double re;
+    private final double im;
 
     public double getRe() {
         return re;
