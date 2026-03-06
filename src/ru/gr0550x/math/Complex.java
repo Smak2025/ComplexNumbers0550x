@@ -1,8 +1,8 @@
 package ru.gr0550x.math;
 
 public class Complex {
-    private final double re;
-    private final double im;
+    private double re;
+    private double im;
 
     public double getRe() {
         return re;
@@ -22,8 +22,43 @@ public class Complex {
         this.im = im;
     }
 
-    public Complex plus(Complex other){
-        return new Complex(this.re + other.re, im + other.im);
+    public Complex plus(Complex that){
+        return new Complex(this.re + that.re, im + that.im);
+    }
+
+    public Complex minus(Complex that){
+        return new Complex(this.re - that.re, this.im - that.im);
+    }
+
+    public Complex times(Complex that){
+        return new Complex(
+                this.re * that.re - this.im * that.im,
+                this.re * that.im + that.re * this.im
+        );
+    }
+
+    public Complex div(Complex that){
+        var den = that.re * that.re + that.im * that.im;
+        return new Complex(
+                (this.re * that.re + this.im * that.im)/den,
+                (that.re * this.im - this.re * that.im)/den
+        );
+    }
+
+    public void plusAssign(Complex that){
+        this.re += that.re;
+        this.im += that.im;
+    }
+
+    public void minusAssign(Complex that){
+        this.re -= that.re;
+        this.im -= that.im;
+    }
+
+    public void timesAssign(Complex that){
+        var tmp = this.re * that.re - this.im * that.im;
+        this.im = this.re * that.im + that.re * this.im;
+        this.re = tmp;
     }
 
     @Override
@@ -44,5 +79,24 @@ public class Complex {
             sb.append("i");
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Complex that){
+            return this.re == that.re && this.im == that.im;
+        }
+        if (obj instanceof Number that){
+            return this.im == 0.0 && this.re == that.doubleValue();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        var result = 0;
+        result = 31 * result + Double.hashCode(im);
+        result = 31 * result + Double.hashCode(re);
+        return result;
     }
 }

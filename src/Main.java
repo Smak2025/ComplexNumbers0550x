@@ -5,4 +5,5 @@ void main() {
     System.out.println(z);
     var z2 = new Complex(2.0, -0.5);
     z.plus(z2);
+    System.out.println(Double.hashCode(0.0));
 }

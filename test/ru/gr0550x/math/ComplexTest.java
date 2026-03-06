@@ -4,8 +4,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,5 +66,64 @@ class ComplexTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    @ParameterizedTest
+    @DisplayName("Сложение комплексных чисел")
+    @MethodSource("plusArgsGenerator")
+    void plusTest(Complex z1, Complex z2, Complex expected){
+        var actual = z1.plus(z2);
+        assertEquals(expected, actual); // expected.equals(actual)
+    }
 
+    private static Stream<Arguments> plusArgsGenerator(){
+        var z = new Complex(3.0, 3.0);
+        return Stream.of(new Arguments[]{
+                Arguments.of(new Complex(1.0, 2.0), new Complex(-1.0, 1.0), new Complex(0.0, 3.0)),
+                Arguments.of(new Complex(0.0, 0.0), new Complex(5.0, 1.0), new Complex(5.0, 1.0)),
+                Arguments.of(z, z, new Complex(6.0, 6.0)),
+        });
+    }
+
+    @ParameterizedTest
+    @DisplayName("HashCode")
+    @MethodSource("hashCodeArgsGenerator")
+    void hashCodeTest(Complex z1, Complex z2, boolean expected){
+        var h1 = z1.hashCode();
+        var h2 = z2.hashCode();
+        var actual = h1 == h2;
+        assertEquals(expected, actual);
+    }
+
+    private static Stream<Arguments> hashCodeArgsGenerator(){
+        var builder = Stream.<Arguments>builder();
+        builder.add(Arguments.of(new Complex(1.0, 2.0), new Complex(1.0, 2.0), true));
+        builder.add(Arguments.of(new Complex(0.0, 1.0), new Complex(3.0, -7.0), false));
+        builder.add(Arguments.of(new Complex(-3.0, 5.0), new Complex(5.0, -3.0), false));
+        builder.add(Arguments.of(new Complex(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY), new Complex(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY), true));
+        return builder.build();
+    }
+
+    @ParameterizedTest
+    @DisplayName("HashCode2")
+    @MethodSource("hashCode2ArgsGenerator")
+    void hashCode2Test(Complex z1, double d, boolean expected){
+        var h1 = z1.hashCode();
+        var h2 = Double.hashCode(d);
+        var actual = h1 == h2;
+        assertEquals(expected, actual);
+    }
+
+    private static Stream<Arguments> hashCode2ArgsGenerator(){
+        var builder = Stream.<Arguments>builder();
+        builder.add(Arguments.of(new Complex(1.0, 0.0), 1.0, true));
+        return builder.build();
+    }
+
+    @Test
+    @DisplayName("Умножение с присвоением")
+    void timesAssignTest(){
+        var z1 = new Complex(3.0, 1.0);
+        var z2 = new Complex(3.0, 1.0);
+        z1.timesAssign(z2);
+        assertEquals(new Complex(8, 6), z1);
+    }
 }
