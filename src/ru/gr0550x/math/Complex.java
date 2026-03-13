@@ -1,5 +1,7 @@
 package ru.gr0550x.math;
 
+import java.util.Objects;
+
 public class Complex {
     private double re;
     private double im;
@@ -10,6 +12,14 @@ public class Complex {
 
     public double getIm() {
         return im;
+    }
+
+    public double getAbs(){
+        return Math.sqrt(re*re + im*im);
+    }
+
+    public double getArg(){
+        return Math.atan2(im, re);
     }
 
     public Complex(){
@@ -94,9 +104,10 @@ public class Complex {
 
     @Override
     public int hashCode() {
-        var result = 0;
-        result = 31 * result + Double.hashCode(im);
-        result = 31 * result + Double.hashCode(re);
-        return result;
+        return Objects.hash(re, im);
+//        var result = 0;
+//        result = 31 * result + Double.hashCode(im);
+//        result = 31 * result + Double.hashCode(re);
+//        return result;
     }
 }
