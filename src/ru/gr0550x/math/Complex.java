@@ -1,5 +1,6 @@
 package ru.gr0550x.math;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class Complex {
@@ -76,14 +77,19 @@ public class Complex {
         if (Double.valueOf(re).isNaN() || Double.valueOf(im).isNaN())
             return "NaN";
         var sb = new StringBuilder();
-        if (re != 0.0 || im == 0.0) sb.append(re);
-        if (im != 0.0){
+        var epsilon = 1e-15;
+        var df = new DecimalFormat("#.###############");
+        if (Math.abs(re) > epsilon || Math.abs(im) < epsilon) {
+            sb.append(df.format(re));
+        }
+        if (Math.abs(im) > epsilon){
             if (im > 0.0) {
-                if (re != 0.0) sb.append("+");
+                if (Math.abs(re) > epsilon) sb.append("+");
             }
             else sb.append("-");
-            if (Math.abs(im) != 1.0)
-                sb.append(Math.abs(im));
+            if (Math.abs(im - 1.0) > epsilon) {
+                sb.append(df.format(Math.abs(im)));
+            }
             if (Double.valueOf(im).isInfinite())
                 sb.append(" ");
             sb.append("i");
